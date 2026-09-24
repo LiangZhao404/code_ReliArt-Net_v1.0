@@ -1,0 +1,2 @@
+Code availability
+A MATLAB R2024a reference implementation of ReliArt-Net, including preprocessing, the multi-branch CNN and Transformer architecture, adaptive fusion, dual-output training, post-hoc temperature scaling, and evaluation utilities, is available at [REPOSITORY URL/DOI]. The repository documents manuscript-specified parameters and explicitly identifies implementation defaults where the manuscript does not provide a numeric setting. The artwork images are not redistributed with the code and remain subject to the terms of their source institutions and repositories.
