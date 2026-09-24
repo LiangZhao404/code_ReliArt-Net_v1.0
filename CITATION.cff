@@ -1,11 +1,12 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite the associated ReliArt-Net article."
-title: "ReliArt-Net: MATLAB R2024a reference implementation"
+message: "If you use this software, please cite the associated ReliArt-Net article and this software release."
+title: "ReliArt-Net: MATLAB R2024a implementation"
 type: software
 version: 1.0.0
 date-released: 2026-09-24
 authors:
   - family-names: "Zhao"
     given-names: "Liang"
-repository-code: "REPLACE_WITH_REPOSITORY_URL"
+repository-code: "https://github.com/LiangZhao404/code_ReliArt-Net_v1.0"
+url: "https://github.com/LiangZhao404/code_ReliArt-Net_v1.0"
 license: MIT

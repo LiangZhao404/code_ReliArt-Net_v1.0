@@ -1,9 +1,11 @@
-# ReliArt-Net — MATLAB R2024a reference implementation
+# ReliArt-Net — MATLAB R2024a implementation
 
-This repository accompanies the manuscript **“Reproducibility in Art: Reliability of original and reproduced masterpieces based on ReliArt-Net.”** It implements the manuscript-described pipeline in MATLAB R2024a: preprocessing, controlled augmentation, three CNN streams, dilated convolutions, pyramid pooling, 16×16 patch embedding, a 6-block/8-head Transformer, adaptive CNN–Transformer fusion, separate catalogue-status and expert visual-fidelity heads, joint masked multi-task training, and validation-only post-hoc temperature scaling.
+This repository accompanies the manuscript **“Reproducibility in Art: Reliability of original and reproduced masterpieces based on ReliArt-Net.”** It provides a MATLAB R2024a implementation of the method described in the manuscript: preprocessing, controlled augmentation, three CNN streams, dilated convolutions, pyramid pooling, 16×16 patch embedding, a 6-block/8-head Transformer, adaptive CNN–Transformer fusion, separate catalogue-status and expert visual-fidelity heads, joint masked multi-task training, and validation-only post-hoc temperature scaling.
 
-## Provenance and scope
-This code was reconstructed from the final manuscript supplied by the authors. It is a **manuscript-grounded reference implementation**, not a claim that these files are byte-for-byte the historical source code used to generate every reported table. Numeric choices explicitly reported in the manuscript are kept as such. Where the supplied manuscript does not specify a numeric implementation detail (notably all augmentation probabilities/bounds and the recoverable numeric L2 weight-decay value), the repository labels the choice as a repository default rather than inventing a manuscript constant.
+## Scope and reproducibility
+The implementation follows the architecture, training protocol, calibration procedure, and numerical settings explicitly reported in the manuscript. Parameters that are not numerically specified in the manuscript are clearly marked in the configuration/code as **repository defaults** and are not presented as manuscript-reported constants. This distinction is important when attempting exact numerical reproduction of reported results.
+
+The software predicts catalogue-status class and an auxiliary expert-supervised visual-fidelity score. These outputs are distinct and neither should be interpreted independently as proof of physical authorship.
 
 ## Environment
 - MATLAB R2024a
@@ -17,14 +19,16 @@ The manuscript reports Windows 11 Pro and MATLAB R2024a as the experimental envi
 - Primary input: 512×512 RGB; WikiArt-Baroque: 224×224.
 - Direct bilinear resize with antialiasing; no aspect-ratio-preserving padding/cropping at this stage.
 - Primary dataset split: 70% train / 15% validation / 15% locked test, stratified by catalogue-status label.
-- CNN: 3×3 convolutions, dilation rates 2 and 4, terminal 2048 filters, PPM scales 1×1, 2×2, 3×3, 6×6, CNN dropout 0.2.
+- CNN: 3×3 convolutions, dilation rates 2 and 4, terminal 2048 filters, PPM scales 1×1, 2×2, 3×3, 6×6.
 - Transformer: 16×16 patches, D=256, 8 heads, 6 blocks, FFN=1024, dropout 0.1.
-- ReliArt-Net training row: AdamW, initial LR 1e-4, batch 32, 100 epochs, joint-loss λ=0.5.
+- ReliArt-Net row in Table 6: AdamW, initial LR 1e-4, batch size 32, 100 epochs, CNN dropout 0.2, Transformer dropout 0.1, joint-loss λ=0.5.
 - Early stopping patience: 15 epochs; cosine learning-rate schedule.
 - Post-hoc calibration: fit one scalar temperature on validation classification logits by minimizing NLL with network weights frozen; apply the fitted temperature to test classification logits only.
 
+**Note on CNN dropout:** the general experimental-setup prose states CNN dropout 0.3, whereas the ReliArt-Net-specific row in Table 6 reports 0.2. This repository uses **0.2**, following the model-specific Table 6 entry, and records the discrepancy here rather than silently reconciling it.
+
 ## Data
-Images are not redistributed. Create `data/metadata.csv`:
+Artwork images are not redistributed by this repository. Create `data/metadata.csv` with the following fields:
 
 ```csv
 image_path,catalogue_label,fidelity_target,fidelity_mask,artwork_family,source
@@ -34,8 +38,8 @@ image_path,catalogue_label,fidelity_target,fidelity_mask,artwork_family,source
 
 `catalogue_label` is the catalogue-derived binary target. `fidelity_target` is a normalized expert visual-fidelity target, not a probability of autograph authorship. Set `fidelity_mask=1` only when an expert target exists.
 
-## Reproduce the pipeline
-From MATLAB, `cd` to the repository root and run:
+## Run the pipeline
+From MATLAB, change to the repository root and run:
 
 ```matlab
 addpath(genpath(pwd));
@@ -46,16 +50,22 @@ scripts/calibrate
 scripts/evaluate
 ```
 
-For the source- and artwork-family-disjoint sensitivity analysis, run `scripts/prepare_group_disjoint_splits.m`, point the training script at the generated metadata file, and retrain from initialization.
+For the source- and artwork-family-disjoint sensitivity analysis, run `scripts/prepare_group_disjoint_splits.m`, point the training script to the generated metadata file, and retrain from initialization.
 
 ## Outputs
-`artifacts/best_model.mat` stores the validation-selected checkpoint. `validation_logits.mat` is used only to fit temperature. `test_outputs.mat` stores locked-test logits and fidelity predictions. `temperature.mat` stores the validation-fitted scalar temperature.
+- `artifacts/best_model.mat`: validation-selected checkpoint.
+- `validation_logits.mat`: validation logits used only to fit temperature.
+- `test_outputs.mat`: locked-test logits and fidelity predictions.
+- `temperature.mat`: validation-fitted scalar temperature.
 
-## Important interpretation
-The classification probability and auxiliary fidelity score are different quantities. Temperature scaling is applied only to classification logits. Fidelity regression is evaluated only where expert-derived fidelity targets exist. Neither output alone establishes physical authorship.
+## Interpretation of outputs
+The calibrated classification probability and the auxiliary fidelity score are different quantities. Temperature scaling is applied only to classification logits. Fidelity regression is evaluated only for observations with expert-derived fidelity targets. A high fidelity estimate is not a probability of autograph status, and a high catalogue-status probability is not a fidelity score.
 
-## Known manuscript-limited details
-The final manuscript specifies bounded affine/rotation, composition-dependent flipping, content-preserving cropping and moderate photometric perturbation, but does not numerically specify every probability/bound. `config/reliartConfig.m` exposes conservative repository defaults for these values. The supplied manuscript also states L2 weight decay but its numeric value is not recoverable from the supplied final file; the repository therefore defaults it to zero rather than assigning an unsupported manuscript value. Authors should replace these defaults if the original experimental values are available.
+## Implementation defaults not numerically fixed by the manuscript
+The manuscript specifies bounded affine/rotation augmentation, composition-dependent flipping, content-preserving cropping, and moderate photometric perturbation, but it does not provide every numerical probability/bound. Those values are exposed in `config/reliartConfig.m` and explicitly labelled as repository defaults. The manuscript also states that L2 weight decay was used, but the numerical value is not recoverable from the supplied final manuscript; the configuration therefore leaves it at zero rather than attributing an unsupported value to the manuscript. If the original experimental values are available, replace these defaults before attempting exact numerical reproduction.
 
-## Citation and license
-See `CITATION.cff`. Code is released under the MIT License. Dataset/image rights are separate and are not granted by this software license.
+## Citation
+If you use this implementation, please cite the associated manuscript/article and the software release. Citation metadata are provided in `CITATION.cff`.
+
+## License
+The code is released under the MIT License. Dataset and artwork-image rights are separate and are not granted by the software license.
