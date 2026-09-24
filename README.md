@@ -25,7 +25,6 @@ The manuscript reports Windows 11 Pro and MATLAB R2024a as the experimental envi
 - Early stopping patience: 15 epochs; cosine learning-rate schedule.
 - Post-hoc calibration: fit one scalar temperature on validation classification logits by minimizing NLL with network weights frozen; apply the fitted temperature to test classification logits only.
 
-**Note on CNN dropout:** the general experimental-setup prose states CNN dropout 0.3, whereas the ReliArt-Net-specific row in Table 6 reports 0.2. This repository uses **0.2**, following the model-specific Table 6 entry, and records the discrepancy here rather than silently reconciling it.
 
 ## Data
 Artwork images are not redistributed by this repository. Create `data/metadata.csv` with the following fields:
