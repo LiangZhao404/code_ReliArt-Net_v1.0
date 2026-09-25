@@ -1,6 +1,7 @@
 function cfg = reliartConfig()
-%RELIARTCONFIG Manuscript-grounded ReliArt-Net configuration (MATLAB R2024a).
-cfg.environment.matlab = "R2024a";
+%RELIARTCONFIG Manuscript-grounded ReliArt-Net configuration (MATLAB R2025b, Version 25.2).
+cfg.environment.matlab = "R2025b";
+cfg.environment.matlabVersion = "25.2";
 cfg.environment.toolboxes = ["Deep Learning Toolbox","Image Processing Toolbox"];
 
 cfg.data.inputSize = [512 512 3];

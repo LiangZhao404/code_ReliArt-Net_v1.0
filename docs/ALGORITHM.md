@@ -8,4 +8,4 @@ Important semantic separation:
 - Temperature scaling is fitted after training, using validation classification logits only.
 - Calibrated classification probability and predicted visual fidelity are different quantities.
 
-The final manuscript specifies MATLAB R2024a, Deep Learning Toolbox and Image Processing Toolbox; primary input 512x512; WikiArt-Baroque 224x224; AdamW, LR 1e-4, batch 32, 100 epochs, lambda=0.5; CNN dilation rates 2/4; PPM scales 1/2/3/6; Transformer patch 16x16, D=256, 8 heads, depth=6, FFN=1024, dropout=0.1; early stopping patience 15.
+The final manuscript specifies MATLAB R2025b (Version 25.2), Deep Learning Toolbox and Image Processing Toolbox; primary input 512x512; WikiArt-Baroque 224x224; AdamW, LR 1e-4, batch 32, 100 epochs, lambda=0.5; CNN dilation rates 2/4; PPM scales 1/2/3/6; Transformer patch 16x16, D=256, 8 heads, depth=6, FFN=1024, dropout=0.1; early stopping patience 15.

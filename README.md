@@ -1,6 +1,6 @@
-# ReliArt-Net — MATLAB R2024a implementation
+# ReliArt-Net — MATLAB R2025b implementation
 
-This repository accompanies the manuscript **“Reproducibility in Art: Reliability of original and reproduced masterpieces based on ReliArt-Net.”** It provides a MATLAB R2024a implementation of the method described in the manuscript: preprocessing, controlled augmentation, three CNN streams, dilated convolutions, pyramid pooling, 16×16 patch embedding, a 6-block/8-head Transformer, adaptive CNN–Transformer fusion, separate catalogue-status and expert visual-fidelity heads, joint masked multi-task training, and validation-only post-hoc temperature scaling.
+This repository accompanies the manuscript **“Reproducibility in Art: Reliability of original and reproduced masterpieces based on ReliArt-Net.”** It provides a MATLAB R2025b (Version 25.2) implementation of the method described in the manuscript: preprocessing, controlled augmentation, three CNN streams, dilated convolutions, pyramid pooling, 16×16 patch embedding, a 6-block/8-head Transformer, adaptive CNN–Transformer fusion, separate catalogue-status and expert visual-fidelity heads, joint masked multi-task training, and validation-only post-hoc temperature scaling.
 
 ## Scope and reproducibility
 The implementation follows the architecture, training protocol, calibration procedure, and numerical settings explicitly reported in the manuscript. Parameters that are not numerically specified in the manuscript are clearly marked in the configuration/code as **repository defaults** and are not presented as manuscript-reported constants. This distinction is important when attempting exact numerical reproduction of reported results.
@@ -8,12 +8,12 @@ The implementation follows the architecture, training protocol, calibration proc
 The software predicts catalogue-status class and an auxiliary expert-supervised visual-fidelity score. These outputs are distinct and neither should be interpreted independently as proof of physical authorship.
 
 ## Environment
-- MATLAB R2024a
+- MATLAB R2025b (Version 25.2)
 - Deep Learning Toolbox
 - Image Processing Toolbox
 - Statistics and Machine Learning Toolbox is useful for AUROC (`perfcurve`); evaluation degrades gracefully if unavailable.
 
-The manuscript reports Windows 11 Pro and MATLAB R2024a as the experimental environment.
+The manuscript reports Windows 11 Pro and MATLAB R2025b (Version 25.2) as the experimental environment.
 
 ## Manuscript-specified configuration
 - Primary input: 512×512 RGB; WikiArt-Baroque: 224×224.
